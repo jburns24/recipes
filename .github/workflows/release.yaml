@@ -20,6 +20,7 @@ jobs:
                 images: |
                   ghcr.io/jburns24/recipes
                 tags: |
+                  type=scheduled
                   type=ref,event=branch
                   type=ref,event=pr
                   type=semver,pattern={{version}}
