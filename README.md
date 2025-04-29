@@ -10,6 +10,8 @@ A simple website to preserve and organize recipes I have used and liked. This pr
 
 ## How to Use
 
+Primary purpose of this repository is to use GitHub Copilot's prompt-driven workflows to back up recipes from the web. All these reusable prompts were tested and working well in VS Code (version 1.99.3 or later) with ChatGPT 4.1
+
 1. Clone the repository:
    ```sh
    git clone <this-repo-url>
@@ -23,6 +25,12 @@ A simple website to preserve and organize recipes I have used and liked. This pr
    path: dinner/quick/wingle-pan-chicken-vegetables.html
    ```
 6. Review and accept the prompts to save the recipe.
+
+## Refreshing Navigation
+
+If you add, remove, or repurpose recipe files, you can quickly refresh the site's navigation using the special prompt in `.github/prompts/force-refresh-nav.prompt.md`. This will automatically rebuild the navigation in `src/index.html` to match all `.html` files in `src/routes`.
+
+- See [`force-refresh-nav.prompt.md`](.github/prompts/force-refresh-nav.prompt.md) for details and instructions.
 
 ## Prerequisites
 
