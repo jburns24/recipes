@@ -26,6 +26,16 @@ Primary purpose of this repository is to use GitHub Copilot's prompt-driven work
    ```
 6. Review and accept the prompts to save the recipe.
 
+## Adding a Recipe from a Written Recipe Image
+
+You can add a new recipe by uploading a photo or scan of a written recipe using the reusable prompt [`generate-recipe-from-image.prompt.md`](.github/prompts/generate-recipe-from-image.prompt.md):
+
+1. Copy the image file into the `src/routes` directory in the location you want (create any required directories). For example, to add a Mediterranean Salad recipe, place the image at `src/routes/dinner/salad/mediterranean-salad.jpg`.
+2. In VS Code, open the Command Palette (`Cmd+Shift+P` on macOS).
+3. Select `Chat: Use Prompt`, then select `generate-recipe-from-image.prompt.md`.
+4. Paste the recipe image into the prompt context and also paste in `image_file:<RELATIVE_IMAGE_PATH>` (e.g., `image_file:src/routes/dinner/salad/mediterranean-salad.jpg`).
+5. Follow the prompt to extract, review, and confirm the recipe details. The prompt will generate the corresponding `.html` file and update the navigation automatically.
+
 ## Refreshing Navigation
 
 If you add, remove, or repurpose recipe files, you can quickly refresh the site's navigation using the special prompt in `.github/prompts/force-refresh-nav.prompt.md`. This will automatically rebuild the navigation in `src/index.html` to match all `.html` files in `src/routes`.
