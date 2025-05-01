@@ -44,7 +44,8 @@ If you add, remove, or repurpose recipe files, you can quickly refresh the site'
 
 ## Prerequisites
 
-- Docker
+- Docker (Optional for running SingleFile CLI in a container)
+  - If you prefer to run locally you will need: `jq`, chromium or google-chrome, and `curl` installed on your system.
 - Nix-based system
 - Git
 - VS Code (v1.99.3 or later)
