@@ -1,7 +1,8 @@
 ---
-mode: agent
+name: recipe-from-image
 description: Generate a recipe HTML page from a handwritten recipe image and integrate it into the recipe collection
-tools: []
+agent: agent
+tools: ['edit', 'search', 'runCommands', 'problems', 'changes', 'openSimpleBrowser']
 ---
 
 # Generate Recipe from Image
