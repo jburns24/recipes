@@ -1,10 +1,11 @@
-import type Anthropic from '@anthropic-ai/sdk';
+import Anthropic, { APIError } from '@anthropic-ai/sdk';
 import { describe, expect, it, vi } from 'vitest';
 import {
   AnthropicExtractor,
   ExtractedRecipeSchema,
   EXTRACTOR_MODEL,
   ExtractionError,
+  NotARecipeError,
   RECIPE_TOOL_NAME,
   SYSTEM_PROMPT,
   StubExtractor,
@@ -101,33 +102,79 @@ describe('AnthropicExtractor', () => {
     expect(params.model).toBe('claude-haiku-4-5');
   });
 
-  it('wraps SDK failures, refusals and missing tool calls in ExtractionError', async () => {
+  it('wraps SDK failures, refusals and truncated replies in ExtractionError', async () => {
     const run = (create: ReturnType<typeof mockCreate>) =>
       new AnthropicExtractor({ messages: { create } }).extract(input);
     await expect(
       run(mockCreate().mockRejectedValue(new Error('secret key leaked'))),
     ).rejects.toThrow(/request failed$/);
-    await expect(
-      run(mockCreate().mockResolvedValue(message({ stop_reason: 'refusal' }))),
-    ).rejects.toBeInstanceOf(ExtractionError);
-    const noTool = vi
-      .fn()
-      .mockResolvedValue(message({ content: [{ type: 'text', text: 'hi', citations: null }] }));
-    await expect(run(noTool)).rejects.toThrow(/did not return/);
-    expect(noTool).toHaveBeenCalledTimes(1);
+    const refused = run(mockCreate().mockResolvedValue(message({ stop_reason: 'refusal' })));
+    await expect(refused).rejects.toBeInstanceOf(ExtractionError);
+    await expect(refused).rejects.not.toBeInstanceOf(NotARecipeError);
+    const truncated = mockCreate().mockResolvedValue(
+      message({
+        content: [{ type: 'text', text: 'hi', citations: null }],
+        stop_reason: 'max_tokens',
+      }),
+    );
+    const missing = run(truncated);
+    await expect(missing).rejects.toBeInstanceOf(ExtractionError);
+    await expect(missing).rejects.not.toBeInstanceOf(NotARecipeError);
+    await expect(missing).rejects.toThrow(/did not return/);
+    expect(truncated).toHaveBeenCalledTimes(1);
   });
 
-  it('does not retry when the model replies without a tool', async () => {
+  it('keeps the Anthropic status and drops the upstream body', async () => {
+    const create = mockCreate().mockRejectedValue(
+      new APIError(401, { message: 'invalid x-api-key sk-ant-secret' }, 'sk-ant-secret', undefined),
+    );
+    const failed = new AnthropicExtractor({ messages: { create } }).extract(input);
+    await expect(failed).rejects.toBeInstanceOf(ExtractionError);
+    await expect(failed).rejects.toMatchObject({
+      message: 'Recipe extraction request failed (status 401)',
+      status: 401,
+    });
+    await expect(failed).rejects.not.toThrow(/sk-ant-secret/);
+  });
+
+  it('throws NotARecipeError when the model ends the turn without a tool', async () => {
     const create = vi.fn().mockResolvedValue(
       message({
         content: [{ type: 'text', text: 'No recipe was found.', citations: null }],
         stop_reason: 'end_turn',
       }),
     );
-    await expect(new AnthropicExtractor({ messages: { create } }).extract(input)).rejects.toThrow(
-      /did not return a recipe/,
-    );
+    const failed = new AnthropicExtractor({ messages: { create } }).extract(input);
+    await expect(failed).rejects.toBeInstanceOf(NotARecipeError);
+    await expect(failed).rejects.not.toBeInstanceOf(ExtractionError);
+    await expect(failed).rejects.toThrow(/did not return a recipe/);
     expect(create).toHaveBeenCalledTimes(1);
+  });
+
+  it('throws NotARecipeError when the retry ends without a tool', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      const create = vi
+        .fn()
+        .mockResolvedValueOnce(
+          message({
+            content: [toolUse({ ...recipe, slug: 'Bad Slug' })],
+            stop_reason: 'tool_use',
+          }),
+        )
+        .mockResolvedValueOnce(
+          message({
+            content: [{ type: 'text', text: 'No recipe was found.', citations: null }],
+            stop_reason: 'end_turn',
+          }),
+        );
+      const failed = new AnthropicExtractor({ messages: { create } }).extract(input);
+      await expect(failed).rejects.toBeInstanceOf(NotARecipeError);
+      expect(create).toHaveBeenCalledTimes(2);
+      expect(warn).toHaveBeenCalledTimes(1);
+    } finally {
+      warn.mockRestore();
+    }
   });
 
   it('normalizes a slash category and nested items without retrying', async () => {

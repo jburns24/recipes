@@ -58,6 +58,33 @@ describe('UploadDialog', () => {
     expect(screen.getByTestId('upload-submit')).toBeEnabled();
   });
 
+  it('shows a not-a-recipe response and stays open', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        Response.json(
+          {
+            error: {
+              code: 'not_a_recipe',
+              message:
+                "That image doesn't look like a recipe. Try a photo of a recipe card or page.",
+            },
+          },
+          { status: 422 },
+        ),
+      ),
+    );
+    const onclose = vi.fn();
+    render(UploadDialog, { onclose });
+    await userEvent.upload(screen.getByTestId('upload-file-input'), png());
+    await userEvent.click(screen.getByTestId('upload-submit'));
+    expect(await screen.findByTestId('upload-error')).toHaveTextContent(
+      "That image doesn't look like a recipe. Try a photo of a recipe card or page.",
+    );
+    expect(onclose).not.toHaveBeenCalled();
+    expect(screen.getByTestId('upload-submit')).toBeEnabled();
+  });
+
   it('shows API errors and stays open', async () => {
     vi.stubGlobal(
       'fetch',

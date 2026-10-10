@@ -5,7 +5,12 @@ import type { Hono } from 'hono';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MAX_UPLOAD_BYTES, createApp } from './app.js';
 import { createDevAuthenticator, type AppEnv } from './auth.js';
-import { ExtractionError, StubExtractor, type Extractor } from './extract/extractor.js';
+import {
+  ExtractionError,
+  NotARecipeError,
+  StubExtractor,
+  type Extractor,
+} from './extract/extractor.js';
 import { FileStore } from './store/file-store.js';
 import { RecipeConflictError, type RecipeStore } from './store/types.js';
 import { salad, soup } from './store/fixtures.js';
@@ -304,26 +309,89 @@ describe('POST /api/extract', () => {
   });
 
   it('502s when the model output fails schema validation, and stores nothing', async () => {
-    extractFn.mockResolvedValue({ ...extracted, slug: 'Bad Slug' });
-    const res = await upload();
-    expect(res.status).toBe(502);
-    expect(await res.json()).toMatchObject({ error: { code: 'invalid_extraction' } });
-    extractFn.mockResolvedValue('nonsense');
-    expect((await upload()).status).toBe(502);
-    expect(await store.list()).toEqual([]);
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    try {
+      extractFn.mockResolvedValue({ ...extracted, slug: 'Bad Slug' });
+      const res = await upload();
+      expect(res.status).toBe(502);
+      expect(await res.json()).toMatchObject({ error: { code: 'invalid_extraction' } });
+      extractFn.mockResolvedValue('nonsense');
+      expect((await upload()).status).toBe(502);
+      expect(await store.list()).toEqual([]);
+      expect(error).toHaveBeenCalledTimes(2);
+      const logged = error.mock.calls.map((call) => JSON.stringify(call)).join('\n');
+      expect(logged).toContain('invalid_extraction');
+      expect(logged).toContain('The model returned an invalid recipe');
+      expect(logged).toContain('image/png');
+      expect(logged).toContain(`size=${String(PNG.length)}`);
+      expect(logged).not.toContain('Bad Slug');
+      expect(logged).not.toContain(Buffer.from(PNG).toString('base64'));
+    } finally {
+      error.mockRestore();
+    }
+  });
+
+  it('422s when the image is not a recipe and logs one line', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    try {
+      extractFn.mockRejectedValue(new NotARecipeError());
+      const res = await upload();
+      expect(res.status).toBe(422);
+      expect(await res.json()).toEqual({
+        error: {
+          code: 'not_a_recipe',
+          message: "That image doesn't look like a recipe. Try a photo of a recipe card or page.",
+        },
+      });
+      expect(await store.list()).toEqual([]);
+      expect(error).not.toHaveBeenCalled();
+      expect(warn).toHaveBeenCalledTimes(1);
+      const line = JSON.stringify(warn.mock.calls[0]);
+      expect(line).toContain('not_a_recipe');
+      expect(line).toContain('Model did not return a recipe');
+      expect(line).toContain('mediaType=image/png');
+      expect(line).toContain(`size=${String(PNG.length)}`);
+      expect(line).not.toContain('status=');
+      expect(line).not.toContain(Buffer.from(PNG).toString('base64'));
+    } finally {
+      warn.mockRestore();
+      error.mockRestore();
+    }
   });
 
   it('502s on extractor failures without leaking internals', async () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    extractFn.mockRejectedValue(new ExtractionError('Model declined the request'));
-    const declined = await upload();
-    expect(declined.status).toBe(502);
-    expect(await declined.json()).toMatchObject({ error: { code: 'extraction_failed' } });
-    extractFn.mockRejectedValue(new Error('sk-ant-secret'));
-    const res = await upload();
-    expect(res.status).toBe(502);
-    expect(await res.text()).not.toContain('sk-ant-secret');
-    spy.mockRestore();
+    try {
+      extractFn.mockRejectedValue(new ExtractionError('Model declined the request'));
+      const declined = await upload();
+      expect(declined.status).toBe(502);
+      expect(await declined.json()).toEqual({
+        error: { code: 'extraction_failed', message: 'Model declined the request' },
+      });
+      extractFn.mockRejectedValue(
+        new ExtractionError('Recipe extraction request failed (status 529)', 529),
+      );
+      const overloaded = await upload();
+      expect(overloaded.status).toBe(502);
+      expect(await overloaded.json()).toMatchObject({ error: { code: 'extraction_failed' } });
+      extractFn.mockRejectedValue(new Error('sk-ant-secret'));
+      const res = await upload();
+      expect(res.status).toBe(502);
+      expect(await res.text()).not.toContain('sk-ant-secret');
+      const logged = spy.mock.calls.map((call) => JSON.stringify(call)).join('\n');
+      expect(logged).toContain('extraction_failed');
+      expect(logged).toContain('Model declined the request');
+      expect(logged).toContain('status=529');
+      expect(logged).toContain('mediaType=image/png');
+      expect(logged).toContain(`size=${String(PNG.length)}`);
+      expect(logged).toContain('unexpected extractor failure (Error)');
+      expect(logged).not.toContain('sk-ant-secret');
+      expect(logged).not.toContain(Buffer.from(PNG).toString('base64'));
+      expect(spy).toHaveBeenCalledTimes(3);
+    } finally {
+      spy.mockRestore();
+    }
   });
 
   it('503s when no extractor is configured', async () => {
