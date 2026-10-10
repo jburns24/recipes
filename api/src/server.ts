@@ -1,3 +1,4 @@
+// API entry point: loads config, wires auth and the extractor, and starts the Hono server.
 import { serve } from '@hono/node-server';
 import { createApp } from './app.js';
 import { createAuthenticator } from './auth.js';
