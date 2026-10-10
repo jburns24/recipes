@@ -9,14 +9,77 @@ import {
 } from '@recipes/shared';
 import { requireAuth, type AppEnv, type Authenticator } from './auth.js';
 import { HttpError, errorBody, handleError } from './errors.js';
-import { ExtractedRecipeSchema, ExtractionError, type Extractor } from './extract/extractor.js';
-import { IMAGE_EXTENSIONS, isAllowedImageType, sniffImageType } from './extract/image.js';
+import {
+  ExtractedRecipeSchema,
+  ExtractionError,
+  NotARecipeError,
+  type Extractor,
+} from './extract/extractor.js';
+import {
+  IMAGE_EXTENSIONS,
+  isAllowedImageType,
+  sniffImageType,
+  type ImageType,
+} from './extract/image.js';
 import { RecipeConflictError, assertValidImageKey, type RecipeStore } from './store/index.js';
 
 export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 /** Multipart framing overhead allowed on top of the file itself. */
 const MULTIPART_OVERHEAD = 64 * 1024;
 const MAX_SLUG_ATTEMPTS = 50;
+const NOT_A_RECIPE_MESSAGE =
+  "That image doesn't look like a recipe. Try a photo of a recipe card or page.";
+
+type ExtractionCode = 'not_a_recipe' | 'extraction_failed' | 'invalid_extraction';
+
+/** One line per extraction failure. Never includes image bytes, base64, tokens, or keys. */
+function logExtractionFailure(fields: {
+  code: ExtractionCode;
+  message: string;
+  status?: number;
+  mediaType: ImageType;
+  size: number;
+}): void {
+  const status = fields.status === undefined ? '' : ` status=${String(fields.status)}`;
+  const line =
+    `extraction failed code=${fields.code} message=${JSON.stringify(fields.message)}` +
+    `${status} mediaType=${fields.mediaType} size=${String(fields.size)}`;
+  if (fields.code === 'not_a_recipe') console.warn(line);
+  else console.error(line);
+}
+
+function extractionFailure(err: unknown): {
+  code: 'not_a_recipe' | 'extraction_failed';
+  httpStatus: 422 | 502;
+  message: string;
+  clientMessage: string;
+  status?: number;
+} {
+  if (err instanceof NotARecipeError) {
+    return {
+      code: 'not_a_recipe',
+      httpStatus: 422,
+      message: err.message,
+      clientMessage: NOT_A_RECIPE_MESSAGE,
+    };
+  }
+  if (err instanceof ExtractionError) {
+    return {
+      code: 'extraction_failed',
+      httpStatus: 502,
+      message: err.message,
+      clientMessage: err.message,
+      status: err.status,
+    };
+  }
+  const name = err instanceof Error ? err.name : 'unknown';
+  return {
+    code: 'extraction_failed',
+    httpStatus: 502,
+    message: `unexpected extractor failure (${name})`,
+    clientMessage: 'Recipe extraction failed',
+  };
+}
 
 export interface AppDeps {
   store: RecipeStore;
@@ -146,15 +209,26 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
           existingCategories,
         });
       } catch (err) {
-        if (err instanceof ExtractionError) {
-          throw new HttpError(502, 'extraction_failed', err.message);
-        }
-        console.error('Extractor error:', err instanceof Error ? err.message : String(err));
-        throw new HttpError(502, 'extraction_failed', 'Recipe extraction failed');
+        const failure = extractionFailure(err);
+        logExtractionFailure({
+          code: failure.code,
+          message: failure.message,
+          status: failure.status,
+          mediaType: declared,
+          size: bytes.byteLength,
+        });
+        throw new HttpError(failure.httpStatus, failure.code, failure.clientMessage);
       }
       const extracted = ExtractedRecipeSchema.safeParse(raw);
       if (!extracted.success) {
-        throw new HttpError(502, 'invalid_extraction', 'The model returned an invalid recipe');
+        const message = 'The model returned an invalid recipe';
+        logExtractionFailure({
+          code: 'invalid_extraction',
+          message,
+          mediaType: declared,
+          size: bytes.byteLength,
+        });
+        throw new HttpError(502, 'invalid_extraction', message);
       }
 
       // Slug uniqueness policy: suffix (-2, -3, ...) rather than 409, so a re-upload

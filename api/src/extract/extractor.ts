@@ -20,11 +20,26 @@ export interface Extractor {
   extract(input: ExtractInput): Promise<unknown>;
 }
 
-/** The extractor failed (upstream error, refusal, no structured output). Maps to 502. */
+/** Upstream extractor failure (API error or refusal). Maps to 502. */
 export class ExtractionError extends Error {
-  constructor(message: string) {
+  /** Anthropic HTTP status when the failure came from the API. */
+  readonly status?: number;
+
+  constructor(message: string, status?: number) {
     super(message);
     this.name = 'ExtractionError';
+    this.status = status;
+  }
+}
+
+/**
+ * The model finished its turn without calling `save_recipe`.
+ * That is a deliberate "not a recipe" answer, not an upstream failure. Maps to 422.
+ */
+export class NotARecipeError extends Error {
+  constructor(message = 'Model did not return a recipe') {
+    super(message);
+    this.name = 'NotARecipeError';
   }
 }
 
@@ -174,7 +189,9 @@ export class AnthropicExtractor implements Extractor {
   async extract(input: ExtractInput): Promise<unknown> {
     const normalized = normalizeExtractedInput(toolInput(await this.createMessage(input)));
     if (ExtractedRecipeSchema.safeParse(normalized).success) return normalized;
-    // One retry. The caller still maps a second schema failure to invalid_extraction.
+    // One retry, and only for invalid tool input. A deliberate no-tool reply throws
+    // NotARecipeError inside toolInput and is not retried. The caller maps a second
+    // schema failure to invalid_extraction.
     console.warn('Recipe extraction output failed validation; retrying once');
     return normalizeExtractedInput(toolInput(await this.createMessage(input)));
   }
@@ -227,8 +244,12 @@ export class AnthropicExtractor implements Extractor {
         ],
       });
     } catch (err) {
-      const status = err instanceof Anthropic.APIError ? ` (status ${String(err.status)})` : '';
-      throw new ExtractionError(`Recipe extraction request failed${status}`);
+      const status =
+        err instanceof Anthropic.APIError && typeof err.status === 'number'
+          ? err.status
+          : undefined;
+      const suffix = status === undefined ? '' : ` (status ${String(status)})`;
+      throw new ExtractionError(`Recipe extraction request failed${suffix}`, status);
     }
   }
 }
@@ -238,8 +259,11 @@ function toolInput(response: Anthropic.Message): unknown {
   const block = response.content.find(
     (b): b is Anthropic.ToolUseBlock => b.type === 'tool_use' && b.name === RECIPE_TOOL_NAME,
   );
-  if (!block) throw new ExtractionError('Model did not return a recipe');
-  return block.input;
+  if (block) return block.input;
+  // tool_choice auto: ending the turn without the tool means the image is not a recipe.
+  // Truncation and any other stop reason are upstream failures, not that decision.
+  if (response.stop_reason === 'end_turn') throw new NotARecipeError();
+  throw new ExtractionError('Model did not return a recipe');
 }
 
 const kebab = (s: string): string =>
