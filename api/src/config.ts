@@ -22,6 +22,10 @@ const EnvSchema = z.object({
   ALLOWED_EMAILS: opt,
   ANTHROPIC_API_KEY: opt,
   CLAUDE_MODEL: opt,
+  CLAUDE_EFFORT: z.preprocess(
+    (v) => (v === '' ? undefined : v),
+    z.enum(['low', 'medium', 'high', 'xhigh', 'max']).default('low'),
+  ),
   CLAUDE_STUB: opt,
 });
 
@@ -37,6 +41,8 @@ export interface Config {
   anthropicApiKey?: string;
   /** Extractor model id. `CLAUDE_MODEL`, or `EXTRACTOR_MODEL` when unset. */
   claudeModel: string;
+  /** Extractor effort level. `CLAUDE_EFFORT`, defaults to 'low'. */
+  claudeEffort: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
   claudeStub: boolean;
 }
 
@@ -91,6 +97,7 @@ export function loadConfig(env: Env = process.env): Config {
     allowedEmails,
     anthropicApiKey: e.ANTHROPIC_API_KEY,
     claudeModel: e.CLAUDE_MODEL || EXTRACTOR_MODEL,
+    claudeEffort: e.CLAUDE_EFFORT,
     claudeStub,
   };
 }

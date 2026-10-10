@@ -68,10 +68,15 @@ export class AnthropicExtractor implements Extractor {
   constructor(
     private readonly client: MessagesClient,
     private readonly model: string = EXTRACTOR_MODEL,
+    private readonly effort: 'low' | 'medium' | 'high' | 'xhigh' | 'max' = 'low',
   ) {}
 
-  static fromApiKey(apiKey: string, model: string = EXTRACTOR_MODEL): AnthropicExtractor {
-    return new AnthropicExtractor(new Anthropic({ apiKey }), model);
+  static fromApiKey(
+    apiKey: string,
+    model: string = EXTRACTOR_MODEL,
+    effort: 'low' | 'medium' | 'high' | 'xhigh' | 'max' = 'low',
+  ): AnthropicExtractor {
+    return new AnthropicExtractor(new Anthropic({ apiKey }), model, effort);
   }
 
   async extract(input: ExtractInput): Promise<unknown> {
@@ -88,6 +93,7 @@ export class AnthropicExtractor implements Extractor {
       response = await this.client.messages.create({
         model: this.model,
         max_tokens: 16000,
+        output_config: { effort: this.effort },
         system: SYSTEM_PROMPT,
         tools: [
           {

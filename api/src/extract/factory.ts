@@ -12,6 +12,6 @@ export function createExtractor(config: Config): Extractor | undefined {
     return new StubExtractor();
   }
   return config.anthropicApiKey
-    ? AnthropicExtractor.fromApiKey(config.anthropicApiKey, config.claudeModel)
+    ? AnthropicExtractor.fromApiKey(config.anthropicApiKey, config.claudeModel, config.claudeEffort)
     : undefined;
 }
