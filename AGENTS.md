@@ -42,7 +42,7 @@ Recipes are not mine; see the disclaimer in README.md.
 - `POST /api/extract` (multipart field `image`, max 8MB, jpeg/png/webp/gif checked by magic bytes) needs `Authorization: Bearer <token>`. Returns 201 + recipe; duplicate slugs get `-2`, `-3` suffixes.
 - Errors are always `{error: {code, message, details?}}`. Env vars: see `.env.example`.
 - Fail closed: dev auth and `CLAUDE_STUB` throw at startup when `NODE_ENV=production`; supabase auth without `SUPABASE_URL` (JWKS) or a legacy `SUPABASE_JWT_SECRET` throws; production also requires `ALLOWED_EMAILS`. JWKS-only auth (no `SUPABASE_JWT_SECRET`) is the production path for asymmetric signing keys. Anonymous Supabase sessions are rejected. Supabase RLS is read-only for clients: all writes use the API service role (`SUPABASE_SERVICE_ROLE_KEY`, an `sb_secret_…` key or a legacy service_role JWT).
-- Claude Sonnet 5.5 rejects forced `tool_choice`, so the extractor uses `auto` + prompt and zod-validates the output.
+- The extractor uses Claude Haiku 5.5 (`claude-haiku-5-5`, override with `CLAUDE_MODEL`). Haiku 5.5 accepts image input and tool use, including `tool_choice: auto`. The request uses `auto` plus a prompt that requires the `save_recipe` tool, then zod-validates the tool input.
 
 ## Conventions
 

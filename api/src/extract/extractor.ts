@@ -28,7 +28,12 @@ export class ExtractionError extends Error {
   }
 }
 
-export const EXTRACTOR_MODEL = 'claude-sonnet-5-5';
+/**
+ * Claude Haiku 5.5 on the Claude API. The installed SDK (0.131.0) does not
+ * enumerate this id yet; its `Model` type still accepts it. Override with
+ * `CLAUDE_MODEL`.
+ */
+export const EXTRACTOR_MODEL = 'claude-haiku-5-5';
 export const RECIPE_TOOL_NAME = 'save_recipe';
 
 export const SYSTEM_PROMPT = `You transcribe recipes from photos or screenshots into structured data.
@@ -63,8 +68,8 @@ export class AnthropicExtractor implements Extractor {
     private readonly model: string = EXTRACTOR_MODEL,
   ) {}
 
-  static fromApiKey(apiKey: string): AnthropicExtractor {
-    return new AnthropicExtractor(new Anthropic({ apiKey }));
+  static fromApiKey(apiKey: string, model: string = EXTRACTOR_MODEL): AnthropicExtractor {
+    return new AnthropicExtractor(new Anthropic({ apiKey }), model);
   }
 
   async extract(input: ExtractInput): Promise<unknown> {
@@ -74,8 +79,10 @@ export class AnthropicExtractor implements Extractor {
 
     let response: Anthropic.Message;
     try {
-      // Claude Sonnet 5.5 rejects forced tool_choice (400), so we use "auto" and
-      // the system prompt requires the tool call; the result is zod-validated by the caller.
+      // Haiku 5.5 accepts image input and tool use. `auto` is supported (forced
+      // `any` / `tool` are too, but skip adaptive thinking). The prompt requires
+      // the tool call; the caller zod-validates the result. Do not send
+      // temperature, top_p, or top_k: Haiku 5.5 rejects those sampling params.
       response = await this.client.messages.create({
         model: this.model,
         max_tokens: 16000,

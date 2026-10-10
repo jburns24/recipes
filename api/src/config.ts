@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { EXTRACTOR_MODEL } from './extract/extractor.js';
 
 type Env = Record<string, string | undefined>;
 
@@ -20,6 +21,7 @@ const EnvSchema = z.object({
   SUPABASE_JWT_SECRET: opt,
   ALLOWED_EMAILS: opt,
   ANTHROPIC_API_KEY: opt,
+  CLAUDE_MODEL: opt,
   CLAUDE_STUB: opt,
 });
 
@@ -33,6 +35,8 @@ export interface Config {
   /** Lower-cased. Empty means "any authenticated user". */
   allowedEmails: string[];
   anthropicApiKey?: string;
+  /** Extractor model id. `CLAUDE_MODEL`, or `EXTRACTOR_MODEL` when unset. */
+  claudeModel: string;
   claudeStub: boolean;
 }
 
@@ -86,6 +90,7 @@ export function loadConfig(env: Env = process.env): Config {
     supabaseJwtSecret: e.SUPABASE_JWT_SECRET,
     allowedEmails,
     anthropicApiKey: e.ANTHROPIC_API_KEY,
+    claudeModel: e.CLAUDE_MODEL || EXTRACTOR_MODEL,
     claudeStub,
   };
 }

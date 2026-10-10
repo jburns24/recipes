@@ -1,12 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import { loadConfig } from './config.js';
+import { EXTRACTOR_MODEL } from './extract/extractor.js';
 
 const dev = { AUTH_MODE: 'dev', DEV_AUTH_TOKEN: 'dev-token' };
 
 describe('loadConfig', () => {
   it('parses dev mode and defaults', () => {
     const c = loadConfig(dev);
-    expect(c).toMatchObject({ authMode: 'dev', port: 3000, claudeStub: false, allowedEmails: [] });
+    expect(c).toMatchObject({
+      authMode: 'dev',
+      port: 3000,
+      claudeStub: false,
+      allowedEmails: [],
+      claudeModel: EXTRACTOR_MODEL,
+    });
+  });
+
+  it('uses CLAUDE_MODEL when set and ignores an empty value', () => {
+    expect(loadConfig({ ...dev, CLAUDE_MODEL: 'claude-haiku-4-5' }).claudeModel).toBe(
+      'claude-haiku-4-5',
+    );
+    expect(loadConfig({ ...dev, CLAUDE_MODEL: '' }).claudeModel).toBe(EXTRACTOR_MODEL);
   });
 
   it('refuses dev auth in production', () => {

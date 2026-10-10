@@ -11,5 +11,7 @@ export function createExtractor(config: Config): Extractor | undefined {
     if (config.isProduction) throw new Error('CLAUDE_STUB is forbidden when NODE_ENV=production');
     return new StubExtractor();
   }
-  return config.anthropicApiKey ? AnthropicExtractor.fromApiKey(config.anthropicApiKey) : undefined;
+  return config.anthropicApiKey
+    ? AnthropicExtractor.fromApiKey(config.anthropicApiKey, config.claudeModel)
+    : undefined;
 }

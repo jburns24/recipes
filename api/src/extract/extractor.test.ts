@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   AnthropicExtractor,
   ExtractedRecipeSchema,
+  EXTRACTOR_MODEL,
   ExtractionError,
   RECIPE_TOOL_NAME,
   StubExtractor,
@@ -33,7 +34,7 @@ const message = (over: {
   id: 'msg_1',
   type: 'message',
   role: 'assistant',
-  model: 'claude-sonnet-5-5',
+  model: EXTRACTOR_MODEL,
   content: [],
   stop_reason: 'end_turn',
   stop_sequence: null,
@@ -64,7 +65,8 @@ describe('AnthropicExtractor', () => {
     expect(out).toEqual(recipe);
 
     const params = create.mock.calls[0]?.[0] as Anthropic.MessageCreateParamsNonStreaming;
-    expect(params.model).toBe('claude-sonnet-5-5');
+    expect(EXTRACTOR_MODEL).toBe('claude-haiku-5-5');
+    expect(params.model).toBe(EXTRACTOR_MODEL);
     expect(params.tool_choice).toEqual({ type: 'auto' });
     expect(params.tools?.[0]).toMatchObject({ name: RECIPE_TOOL_NAME });
     expect(params.system).toMatch(/faithfully/);
@@ -78,6 +80,15 @@ describe('AnthropicExtractor', () => {
       },
     });
     expect(JSON.stringify(content)).toContain('- dinner/quick');
+  });
+
+  it('sends an explicit model override', async () => {
+    const create = vi
+      .fn()
+      .mockResolvedValue(message({ content: [toolUse(recipe)], stop_reason: 'tool_use' }));
+    await new AnthropicExtractor({ messages: { create } }, 'claude-haiku-4-5').extract(input);
+    const params = create.mock.calls[0]?.[0] as Anthropic.MessageCreateParamsNonStreaming;
+    expect(params.model).toBe('claude-haiku-4-5');
   });
 
   it('wraps SDK failures, refusals and missing tool calls in ExtractionError', async () => {
