@@ -40,6 +40,8 @@ export const SYSTEM_PROMPT = `You transcribe recipes from photos or screenshots 
 
 Rules:
 - Transcribe the recipe faithfully. Do not invent, omit, reword, or "improve" ingredients, quantities, times, or steps. Keep the original wording and units.
+- Correct obvious spelling mistakes in titles and ingredient names (e.g., "Mediterrean" → "Mediterranean"). Do not correct made-up dish names or regional spellings; if unsure, keep the original.
+- Standardize fraction formatting: replace "1/2", "½", etc. with the Unicode half character "½"; similarly for other common fractions (¼, ¾, ⅓, ⅔).
 - Only fill optional fields (subtitle, prepTime, cookTime, totalTime, serves) when the image states them.
 - Group ingredients under a "group" heading only when the source does; otherwise use a single group without a heading.
 - For instructions, put a short bolded/leading phrase in "lead" only when the source has one.
