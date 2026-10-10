@@ -31,6 +31,15 @@ describe('createStore', () => {
     );
   });
 
+  it('accepts an sb_secret key without treating it as a JWT', () => {
+    const s = createStore({
+      STORE: 'supabase',
+      SUPABASE_URL: 'https://proj.supabase.co',
+      SUPABASE_SERVICE_ROLE_KEY: 'sb_secret_not_a_jwt',
+    });
+    expect(s).toBeInstanceOf(SupabaseStore);
+  });
+
   it('requires credentials for supabase', () => {
     expect(() => createStore({ STORE: 'supabase' })).toThrow(/SUPABASE_URL/);
   });

@@ -1,4 +1,5 @@
-import type { Session, SupabaseClient } from '@supabase/supabase-js';
+import { createSupabaseFetch } from '@recipes/shared';
+import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js';
 
 export interface AuthState {
   /** 'dev' only ever happens under `vite dev`; production builds are always 'supabase'. */
@@ -33,7 +34,7 @@ function applySession(s: Session | null): void {
   auth.email = s?.user.email ?? null;
 }
 
-async function getClient(): Promise<SupabaseClient | null> {
+function getClient(): SupabaseClient | null {
   if (client) return client;
   const url = import.meta.env.VITE_SUPABASE_URL;
   const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -41,8 +42,9 @@ async function getClient(): Promise<SupabaseClient | null> {
     auth.error = 'Sign-in is not configured';
     return null;
   }
-  const { createClient } = await import('@supabase/supabase-js');
-  client = createClient(url, key);
+  // VITE_SUPABASE_ANON_KEY is the publishable key (`sb_publishable_…`). It is not a
+  // JWT; the fetch wrapper keeps it on the apikey header only.
+  client = createClient(url, key, { global: { fetch: createSupabaseFetch(key) } });
   return client;
 }
 

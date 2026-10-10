@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from 'jose';
 import { describe, expect, it } from 'vitest';
 import {
   createAuthenticator,
@@ -90,7 +91,6 @@ describe('supabase auth', () => {
     );
     // signToken sets no issuer, so an issuer-pinned verifier must refuse it.
     expect((await get(issuer, `Bearer ${await signToken()}`)).status).toBe(401);
-    const { SignJWT } = await import('jose');
     const noExp = await new SignJWT({ email: 'cook@example.com' })
       .setProtectedHeader({ alg: 'HS256' })
       .setSubject('u')
@@ -101,6 +101,34 @@ describe('supabase auth', () => {
 
   it('refuses to build without any key material', () => {
     expect(() => createSupabaseAuthenticator({})).toThrow();
+  });
+
+  it('verifies ES256 tokens via JWKS with no shared secret', async () => {
+    const { privateKey, publicKey } = await generateKeyPair('ES256', { extractable: true });
+    const jwk = await exportJWK(publicKey);
+    const jwks = createLocalJWKSet({ keys: [{ ...jwk, alg: 'ES256', kid: 'k1', use: 'sig' }] });
+    const issuer = 'https://proj.supabase.co/auth/v1';
+    const token = await new SignJWT({ email: 'cook@example.com' })
+      .setProtectedHeader({ alg: 'ES256', kid: 'k1' })
+      .setSubject('user-1')
+      .setIssuer(issuer)
+      .setAudience('authenticated')
+      .setExpirationTime('1h')
+      .sign(privateKey);
+    const jwksOnly = createSupabaseAuthenticator({
+      supabaseUrl: 'https://proj.supabase.co',
+      jwks,
+    });
+    expect(await jwksOnly(token)).toEqual({ id: 'user-1', email: 'cook@example.com' });
+
+    const hs = await new SignJWT({ email: 'cook@example.com' })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setSubject('user-1')
+      .setIssuer(issuer)
+      .setAudience('authenticated')
+      .setExpirationTime('1h')
+      .sign(new TextEncoder().encode(JWT_SECRET));
+    expect((await get(appWith(jwksOnly), `Bearer ${hs}`)).status).toBe(401);
   });
 
   it('only accepts asymmetric algs when JWKS is configured', async () => {
@@ -139,5 +167,16 @@ describe('createAuthenticator', () => {
     expect(await dev('dev-token')).toEqual({ id: 'dev' });
     const sb = createAuthenticator(loadConfig({ SUPABASE_JWT_SECRET: JWT_SECRET }));
     expect((await sb(await signToken())).id).toBe('user-1');
+  });
+
+  it('builds JWKS auth for a production config that has no JWT secret', () => {
+    const cfg = loadConfig({
+      NODE_ENV: 'production',
+      AUTH_MODE: 'supabase',
+      SUPABASE_URL: 'https://proj.supabase.co',
+      ALLOWED_EMAILS: 'a@x.com',
+    });
+    expect(cfg.supabaseJwtSecret).toBeUndefined();
+    expect(() => createAuthenticator(cfg)).not.toThrow();
   });
 });

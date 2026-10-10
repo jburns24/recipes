@@ -28,6 +28,18 @@ task lint
 
 Other tasks: `task test` (unit + Playwright e2e), `task seed`, `task docker` (local compose; see `docker-compose.yml`).
 
+## Configuration
+
+Copy `.env.example` to `.env`. `task dev` does not need Supabase: it uses `AUTH_MODE=dev` and the file store.
+
+Production uses Supabase's publishable and secret keys. They are not JWTs and they replace the legacy `anon` and `service_role` keys:
+
+- `SUPABASE_SERVICE_ROLE_KEY` — secret key (`sb_secret_...`), server only. The API and `task seed:supabase` send it on the `apikey` header, not as `Authorization: Bearer`.
+- `VITE_SUPABASE_ANON_KEY` — publishable key (`sb_publishable_...`), baked into the web build. Same value as `SUPABASE_ANON_KEY`.
+- User access tokens are verified with the project's JWKS (`$SUPABASE_URL/auth/v1/.well-known/jwks.json`). Leave `SUPABASE_JWT_SECRET` empty unless the project still signs those tokens with the legacy shared HS256 secret.
+
+The frontend image reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Docker build-args. In GitHub Actions those come from repository variables of the same name.
+
 ## Status
 
 The rewrite is in progress. The legacy static nginx site in `src/` is still present and will be archived once recipes are migrated into the data store. The old Copilot prompt workflows have been removed; recipe ingestion will be reintroduced through the new API.

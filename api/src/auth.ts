@@ -47,10 +47,12 @@ export interface SupabaseAuthOptions {
 }
 
 /**
- * Supabase access-token verification. HS256 tokens verify against
- * SUPABASE_JWT_SECRET; asymmetric (ES256/RS256) tokens against the project's
- * JWKS when SUPABASE_URL is set. Algorithms are pinned by key availability, so
- * `alg: none` and key-confusion tokens are rejected.
+ * Supabase access-token verification. Asymmetric (ES256/RS256) user JWTs verify
+ * against the project's JWKS (`SUPABASE_URL/auth/v1/.well-known/jwks.json`).
+ * Legacy HS256 tokens verify against SUPABASE_JWT_SECRET when that is set.
+ * Publishable and secret API keys are not user JWTs and are never accepted here.
+ * Algorithms are pinned by key availability, so `alg: none` and key-confusion
+ * tokens are rejected.
  */
 export function createSupabaseAuthenticator(opts: SupabaseAuthOptions): Authenticator {
   const secret = opts.jwtSecret ? new TextEncoder().encode(opts.jwtSecret) : undefined;
@@ -59,7 +61,7 @@ export function createSupabaseAuthenticator(opts: SupabaseAuthOptions): Authenti
     opts.jwks ??
     (base ? createRemoteJWKSet(new URL(`${base}/auth/v1/.well-known/jwks.json`)) : undefined);
   if (!secret && !jwks) {
-    throw new Error('Supabase auth needs SUPABASE_JWT_SECRET and/or SUPABASE_URL');
+    throw new Error('Supabase auth needs SUPABASE_URL (JWKS) and/or SUPABASE_JWT_SECRET');
   }
   const allowed = (opts.allowedEmails ?? []).map((e) => e.toLowerCase());
 

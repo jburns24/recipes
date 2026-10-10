@@ -24,6 +24,19 @@ describe('loadConfig', () => {
     expect(() => loadConfig({ AUTH_MODE: 'bogus', DEV_AUTH_TOKEN: 'dev-token' })).toThrow();
   });
 
+  it('accepts production JWKS-only auth with no SUPABASE_JWT_SECRET', () => {
+    const c = loadConfig({
+      NODE_ENV: 'production',
+      AUTH_MODE: 'supabase',
+      SUPABASE_URL: 'https://proj.supabase.co/',
+      ALLOWED_EMAILS: 'Owner@Example.com',
+    });
+    expect(c.supabaseJwtSecret).toBeUndefined();
+    expect(c.supabaseUrl).toBe('https://proj.supabase.co');
+    expect(c.allowedEmails).toEqual(['owner@example.com']);
+    expect(c.isProduction).toBe(true);
+  });
+
   it('accepts supabase with a secret or a URL, normalizing emails', () => {
     expect(
       loadConfig({ SUPABASE_JWT_SECRET: 's', ALLOWED_EMAILS: ' A@x.com, b@Y.com ,' }),

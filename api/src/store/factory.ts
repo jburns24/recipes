@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createClient } from '@supabase/supabase-js';
 import { FileStore } from './file-store.js';
+import { createSupabaseClient } from './supabase-client.js';
 import { SupabaseStore, IMAGE_BUCKET } from './supabase-store.js';
 import type { RecipeStore } from './types.js';
 
@@ -14,7 +14,8 @@ export const defaultDataDir = (): string =>
 /**
  * Choose a store from environment:
  *  - STORE=file (default): DATA_DIR (default <repo>/data)
- *  - STORE=supabase: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY, optional SUPABASE_BUCKET
+ *  - STORE=supabase: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (`sb_secret_…` or a legacy
+ *    service_role JWT), optional SUPABASE_BUCKET
  */
 export function createStore(env: Env = process.env): RecipeStore {
   const kind = (env['STORE'] ?? 'file').toLowerCase();
@@ -27,7 +28,7 @@ export function createStore(env: Env = process.env): RecipeStore {
     if (!url || !key) {
       throw new Error('STORE=supabase requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY');
     }
-    const client = createClient(url, key, { auth: { persistSession: false } });
+    const client = createSupabaseClient(url, key);
     return new SupabaseStore(client, {
       publicBaseUrl: url,
       bucket: env['SUPABASE_BUCKET'] ?? IMAGE_BUCKET,
