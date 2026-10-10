@@ -6,8 +6,11 @@ import {
   EXTRACTOR_MODEL,
   ExtractionError,
   RECIPE_TOOL_NAME,
+  SYSTEM_PROMPT,
   StubExtractor,
+  normalizeExtractedInput,
   recipeToolInputSchema,
+  recipeToolStrictBlockers,
 } from './extractor.js';
 import { PNG } from '../testing.js';
 
@@ -69,7 +72,11 @@ describe('AnthropicExtractor', () => {
     expect(params.model).toBe(EXTRACTOR_MODEL);
     expect(params.tool_choice).toEqual({ type: 'auto' });
     expect(params.tools?.[0]).toMatchObject({ name: RECIPE_TOOL_NAME });
-    expect(params.system).toMatch(/faithfully/);
+    expect(params.tools?.[0]).not.toHaveProperty('strict');
+    expect(params.system).toBe(SYSTEM_PROMPT);
+    expect(params.system).toContain('do NOT call any tool');
+    expect(params.system).toContain('½ ¼ ¾ ⅓ ⅔ ⅛');
+    expect(params.system).toContain(`call the ${RECIPE_TOOL_NAME} tool exactly once`);
     const content = params.messages[0]?.content;
     expect(Array.isArray(content) && content[0]).toMatchObject({
       type: 'image',
@@ -80,6 +87,9 @@ describe('AnthropicExtractor', () => {
       },
     });
     expect(JSON.stringify(content)).toContain('- dinner/quick');
+    expect(JSON.stringify(content)).toContain(
+      `If this image shows a recipe, transcribe it by calling ${RECIPE_TOOL_NAME}; otherwise reply without calling any tool.`,
+    );
   });
 
   it('sends an explicit model override', async () => {
@@ -100,13 +110,111 @@ describe('AnthropicExtractor', () => {
     await expect(
       run(mockCreate().mockResolvedValue(message({ stop_reason: 'refusal' }))),
     ).rejects.toBeInstanceOf(ExtractionError);
-    await expect(
-      run(
-        vi
-          .fn()
-          .mockResolvedValue(message({ content: [{ type: 'text', text: 'hi', citations: null }] })),
-      ),
-    ).rejects.toThrow(/did not return/);
+    const noTool = vi
+      .fn()
+      .mockResolvedValue(message({ content: [{ type: 'text', text: 'hi', citations: null }] }));
+    await expect(run(noTool)).rejects.toThrow(/did not return/);
+    expect(noTool).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not retry when the model replies without a tool', async () => {
+    const create = vi.fn().mockResolvedValue(
+      message({
+        content: [{ type: 'text', text: 'No recipe was found.', citations: null }],
+        stop_reason: 'end_turn',
+      }),
+    );
+    await expect(new AnthropicExtractor({ messages: { create } }).extract(input)).rejects.toThrow(
+      /did not return a recipe/,
+    );
+    expect(create).toHaveBeenCalledTimes(1);
+  });
+
+  it('normalizes a slash category and nested items without retrying', async () => {
+    const create = vi.fn().mockResolvedValue(
+      message({
+        content: [
+          toolUse({
+            ...recipe,
+            category: ['Dinner/Quick'],
+            ingredients: [{ items: [['1 cucumber', '2 tomatoes'], 'salt'] }],
+          }),
+        ],
+        stop_reason: 'tool_use',
+      }),
+    );
+    const out = await new AnthropicExtractor({ messages: { create } }).extract(input);
+    expect(out).toEqual({
+      ...recipe,
+      category: ['dinner', 'quick'],
+      ingredients: [{ items: ['1 cucumber', '2 tomatoes', 'salt'] }],
+    });
+    expect(ExtractedRecipeSchema.safeParse(out).success).toBe(true);
+    expect(create).toHaveBeenCalledTimes(1);
+  });
+
+  it('retries the API call once when normalized tool input still fails validation', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      const create = vi
+        .fn()
+        .mockResolvedValueOnce(
+          message({
+            content: [toolUse({ ...recipe, slug: 'Bad Slug' })],
+            stop_reason: 'tool_use',
+          }),
+        )
+        .mockResolvedValueOnce(message({ content: [toolUse(recipe)], stop_reason: 'tool_use' }));
+      const out = await new AnthropicExtractor({ messages: { create } }).extract(input);
+      expect(out).toEqual(recipe);
+      expect(create).toHaveBeenCalledTimes(2);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn.mock.calls[0]).toEqual([
+        'Recipe extraction output failed validation; retrying once',
+      ]);
+      expect(JSON.stringify(warn.mock.calls)).not.toMatch(/sk-ant|Bad Slug|base64/i);
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('returns the second invalid payload after one retry', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      const second = { ...recipe, category: ['Not A Slug'] };
+      const create = vi
+        .fn()
+        .mockResolvedValueOnce(
+          message({ content: [toolUse({ ...recipe, slug: 'Nope' })], stop_reason: 'tool_use' }),
+        )
+        .mockResolvedValueOnce(message({ content: [toolUse(second)], stop_reason: 'tool_use' }));
+      const out = await new AnthropicExtractor({ messages: { create } }).extract(input);
+      expect(out).toEqual({ ...second, category: ['not a slug'] });
+      expect(ExtractedRecipeSchema.safeParse(out).success).toBe(false);
+      expect(create).toHaveBeenCalledTimes(2);
+    } finally {
+      warn.mockRestore();
+    }
+  });
+});
+
+describe('normalizeExtractedInput', () => {
+  it('splits category paths and lowercases segments', () => {
+    expect(
+      normalizeExtractedInput({
+        category: [' Dinner/Quick ', 'Snacks', 3],
+        ingredients: [{ group: 'Sauce', items: [['1 cucumber']] }],
+      }),
+    ).toEqual({
+      category: ['dinner', 'quick', 'snacks', 3],
+      ingredients: [{ group: 'Sauce', items: ['1 cucumber'] }],
+    });
+  });
+
+  it('drops empty category segments and leaves non-objects alone', () => {
+    expect(normalizeExtractedInput({ category: [' / ', ''] })).toEqual({ category: [] });
+    expect(normalizeExtractedInput('nope')).toBe('nope');
+    expect(normalizeExtractedInput(null)).toBe(null);
   });
 });
 
@@ -119,6 +227,7 @@ describe('recipeToolInputSchema', () => {
       expect.arrayContaining(['slug', 'category', 'title', 'ingredients', 'instructions', 'tips']),
     );
     expect(s.properties).not.toHaveProperty('image');
+    expect(recipeToolStrictBlockers(s)).toEqual(['pattern', 'minLength', 'additionalProperties']);
   });
 });
 
