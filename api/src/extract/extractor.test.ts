@@ -93,6 +93,21 @@ describe('AnthropicExtractor', () => {
     );
   });
 
+  it('guides category choice without anchoring on a real category', () => {
+    // The example call must not carry a real or common category: at low effort the
+    // model copies it (a hoisin sauce was saved under dinner/quick).
+    const example = SYSTEM_PROMPT.slice(SYSTEM_PROMPT.indexOf('Shape of a'));
+    const category = /"category":(\[[^\]]*\])/.exec(example)?.[1];
+    expect(category).toBe('["example-category"]');
+    for (const real of ['dinner', 'quick', 'dessert', 'breakfast', 'snacks', 'drinks']) {
+      expect(example).not.toContain(`"${real}"`);
+    }
+    expect(SYSTEM_PROMPT).toContain('Category rules:');
+    expect(SYSTEM_PROMPT).toContain('do NOT pick the closest one');
+    expect(SYSTEM_PROMPT).toContain('Never copy its category');
+    expect(SYSTEM_PROMPT).toContain('a sauce or a dessert is not a dinner');
+  });
+
   it('sends an explicit model override', async () => {
     const create = vi
       .fn()
