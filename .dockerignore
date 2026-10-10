@@ -1,0 +1,19 @@
+# Legacy static site kept only as a reference for visual comparison (phase 4).
+archive/
+node_modules
+**/node_modules
+**/dist
+data/images
+.git
+.github
+.task
+tmp
+.agents
+.claude
+.codex
+.cursor
+.gemini
+api/bundle
+test-results
+playwright-report
+e2e/baselines

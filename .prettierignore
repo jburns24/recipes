@@ -1,0 +1,17 @@
+node_modules
+dist
+/archive
+tmp
+/data
+.agents
+.claude
+.codex
+.cursor
+.gemini
+.github
+package-lock.json
+docker-compose.yml
+/api/bundle
+e2e/baselines
+**/test-results
+**/playwright-report

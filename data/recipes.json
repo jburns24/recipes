@@ -1,0 +1,882 @@
+[
+  {
+    "slug": "sourdough-pancakes",
+    "category": [
+      "breakfast"
+    ],
+    "title": "Sourdough Pancakes",
+    "ingredients": [
+      {
+        "items": [
+          "2 cups activated sourdough starter",
+          "2 tbsp sugar",
+          "1 egg, room temp",
+          "4 tbsp olive oil",
+          "1/2 tsp salt",
+          "1 tsp baking soda",
+          "1 tbsp warm water"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Stir starter, sugar, egg, olive oil, and salt."
+      },
+      {
+        "text": "Mix warm water and baking soda."
+      },
+      {
+        "text": "When pan is hot, fold in baking soda and water."
+      }
+    ],
+    "tips": [],
+    "image": "breakfast/sourdough-pancakes.jpg"
+  },
+  {
+    "slug": "guga-rub",
+    "category": [
+      "dinner",
+      "bbq",
+      "rubs"
+    ],
+    "title": "Guga Rub",
+    "ingredients": [
+      {
+        "items": [
+          "1/4 cup salt",
+          "1/4 cup brown sugar",
+          "1/4 cup smoked paprika",
+          "1 tbsp garlic powder",
+          "1 tbsp onion powder",
+          "1 tbsp black pepper",
+          "1 tbsp turmeric",
+          "1 tsp cinnamon"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Mix all ingredients together in a bowl."
+      },
+      {
+        "text": "Store in an airtight container."
+      },
+      {
+        "text": "Use as a dry rub for your favorite meats."
+      }
+    ],
+    "tips": [],
+    "image": "dinner/bbq/rubs/guga-rub.jpg"
+  },
+  {
+    "slug": "chicken-and-broccoli-with-dill-sauce",
+    "category": [
+      "dinner",
+      "quick"
+    ],
+    "title": "Chicken and Broccoli with Dill Sauce",
+    "subtitle": "I've had this chicken and broccoli recipe for so many years, I don't remember when I first made it. Serve it with a side of couscous or rice for a complete meal, or add some sliced mushrooms or carrots for extra veggies. —Kallee Krong-Mccreery, Escondido, California",
+    "prepTime": "10 minutes",
+    "cookTime": "20 minutes",
+    "totalTime": "30 minutes",
+    "serves": "4 servings",
+    "ingredients": [
+      {
+        "items": [
+          "4 boneless skinless chicken breast halves (6 ounces each)",
+          "1/2 teaspoon garlic salt",
+          "1/4 teaspoon pepper",
+          "1 tablespoon olive oil",
+          "4 cups fresh broccoli florets",
+          "1 cup chicken broth",
+          "1 tablespoon all-purpose flour",
+          "1 tablespoon snipped fresh dill",
+          "1 cup 2% milk"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Sprinkle chicken with garlic salt and pepper. In a large skillet, heat oil over medium heat; brown chicken on both sides. Remove from pan."
+      },
+      {
+        "text": "Add broccoli and broth to same skillet; bring to a boil. Reduce heat; simmer, covered, until broccoli is just tender, 3-5 minutes. Using a slotted spoon, remove broccoli from pan, reserving broth. Keep broccoli warm."
+      },
+      {
+        "text": "In a small bowl, mix flour, dill and milk until smooth; stir into broth in pan. Bring to a boil, stirring constantly; cook and stir until thickened, 1-2 minutes. Add chicken; cook, covered, over medium heat until a thermometer inserted in chicken reads 165°, 10-12 minutes. Serve with broccoli."
+      }
+    ],
+    "tips": [],
+    "image": "dinner/quick/chicken-and-broccoli-with-dill-sauce.jpg",
+    "source_url": "https://www.tasteofhome.com/recipes/chicken-and-broccoli-with-dill-sauce/"
+  },
+  {
+    "slug": "korean-pot-roast",
+    "category": [
+      "dinner",
+      "quick"
+    ],
+    "title": "Korean Pot Roast",
+    "ingredients": [
+      {
+        "items": [
+          "3-4 lbs chuck roast",
+          "1 medium onion, diced",
+          "~½ cup honey",
+          "⅓ cup soy sauce",
+          "10 cloves garlic",
+          "1 jalapeno (optional)",
+          "1\" ginger, grated",
+          "2 tbsp rice vinegar",
+          "1 tbsp sesame oil",
+          "1 tbsp white pepper"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Combine all ingredients in a slow cooker."
+      },
+      {
+        "text": "Cook on high for 8 hours or low for 10 hours."
+      }
+    ],
+    "tips": [],
+    "image": "dinner/quick/korean-pot-roast.jpg"
+  },
+  {
+    "slug": "lemon-garlic-butter-thighs",
+    "category": [
+      "dinner",
+      "quick"
+    ],
+    "title": "Lemon Garlic Butter Chicken and Green Beans Skillet",
+    "subtitle": "This one-skillet Lemon Garlic Butter Chicken recipe is a snap to fix. The chicken thighs and green beans are cooked with lemon garlic butter sauce in the same pan. So addicting!",
+    "prepTime": "10 minutes",
+    "cookTime": "20 minutes",
+    "serves": "3 servings",
+    "ingredients": [
+      {
+        "items": [
+          "3 – 6 skinless, boneless chicken thighs",
+          "1 pound (450g) green beans, trimmed",
+          "3 tablespoons butter, divided or (ghee for paleo diet)",
+          "4 garlic cloves, minced",
+          "1 teaspoon paprika",
+          "1 teaspoon onion powder",
+          "1/4 teaspoon salt and fresh cracked black pepper",
+          "Juice of 1/2 lemon + lemon slices for garnish",
+          "1/2 cup (125ml) chicken stock",
+          "1 tablespoon hot sauce (we used Sriracha)",
+          "1/4 teaspoon crushed red chili pepper flakes, optional",
+          "1/2 cup fresh chopped parsley"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Pat the chicken thighs dry with a paper towel. You want to remove excess moisture so the chicken will brown properly."
+      },
+      {
+        "text": "Combine the onion powder, paprika, salt, and pepper in a small bowl."
+      },
+      {
+        "text": "Rub the chicken thighs generously with the seasoning mixture. Set aside while you prepare green beans."
+      },
+      {
+        "text": "Arrange the green beans in a microwave-safe dish with 1/2 cup (125ml) water and cook in the microwave for 8-10 minutes until almost done but still crisp."
+      },
+      {
+        "text": "Heat a large cast iron skillet over medium-low heat and melt 2 tablespoons of butter."
+      },
+      {
+        "text": "Place the seasoned chicken thighs top side down in the hot skillet and cook, until golden, about 5-6 minutes, then flip the chicken thighs and cook another 5-6 minutes, until cooked through and a cooking thermometer displays 165°F (75°C). If the chicken browns too quickly, lower the heat. Adjust timing depending on the thickness. Transfer chicken to a plate and set aside."
+      },
+      {
+        "text": "In the same skillet, lower the heat and melt the remaining tablespoon of butter. Add chopped parsley, garlic, hot sauce, red crushed chili pepper flakes, and pre-cooked green beans and cook for 4 to 5 minutes, stirring regularly, until cooked to your liking. Add lemon juice and chicken stock and reduce the sauce for a couple of minutes, until slightly thickened."
+      },
+      {
+        "text": "Push green beans to the side, place the chicken back in the pan with the sauce, and reheat quickly. Adjust seasoning chicken with pepper."
+      },
+      {
+        "text": "Serve the lemon garlic butter chicken thighs warm, garnished with more crushed chili pepper, fresh parsley, and a slice of lemon if you like. Enjoy!"
+      }
+    ],
+    "tips": [],
+    "image": "dinner/quick/lemon-garlic-butter-thighs.jpg",
+    "source_url": "https://www.eatwell101.com/lemon-garlic-butter-thighs-and-green-beans-skillet"
+  },
+  {
+    "slug": "meatloaf",
+    "category": [
+      "dinner",
+      "quick"
+    ],
+    "title": "Sym's Meatloaf",
+    "subtitle": "Classic, comforting meatloaf with beef, pork, and a savory tomato soup glaze.",
+    "prepTime": "15 minutes",
+    "cookTime": "1 hour",
+    "totalTime": "1 hour 15 minutes",
+    "serves": "6-8 people",
+    "ingredients": [
+      {
+        "items": [
+          "1 lb ground beef",
+          "1 lb ground pork",
+          "2 eggs",
+          "2 cans tomato soup, divided",
+          "1 tsp Italian seasoning",
+          "1 tsp onion powder",
+          "1 tsp garlic powder",
+          "1 tsp paprika",
+          "1 tsp seasoned salt",
+          "1/2 tsp black pepper"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "lead": "Preheat oven",
+        "text": "Preheat oven to 350°F (175°C). Grease a loaf pan or line a baking sheet with parchment."
+      },
+      {
+        "lead": "Mix ingredients",
+        "text": "In a large bowl, combine ground beef, ground pork, eggs, 1 can tomato soup, Italian seasoning, onion powder, garlic powder, paprika, seasoned salt, and pepper. Mix by hand until tacky and well combined."
+      },
+      {
+        "lead": "Shape loaf",
+        "text": "Form mixture into a loaf shape and place in the prepared pan or on the baking sheet."
+      },
+      {
+        "lead": "Top with soup",
+        "text": "Spread the second can of tomato soup evenly over the top as a glaze."
+      },
+      {
+        "lead": "Bake",
+        "text": "Bake for 55-60 minutes, or until the internal temperature reaches 160°F (71°C)."
+      },
+      {
+        "lead": "Rest and serve",
+        "text": "Let rest 5-10 minutes before slicing. Serve warm."
+      }
+    ],
+    "tips": [
+      "Mix until tacky for best texture—do not overmix.",
+      "Letting the meatloaf rest before slicing helps it hold together.",
+      "Leftovers make great sandwiches!"
+    ],
+    "image": "dinner/quick/meatloaf.jpg"
+  },
+  {
+    "slug": "sheet-pan-sausage-veggies",
+    "category": [
+      "dinner",
+      "quick"
+    ],
+    "title": "Sheet-Pan Maple-Dijon Sausage and Fall Veggies",
+    "subtitle": "This easy Sheet-Pan recipe of sausage, Brussels sprouts, sweet potatoes, and maple-dijon is a delicious sheet-pan dinner that is quick to make and full of Fall flavors! The golden brown, crispy sausage, and Fall Veggies are tossed in a sweet Maple-Dijon sauce.",
+    "prepTime": "10 minutes",
+    "cookTime": "30 minutes",
+    "serves": "6 servings",
+    "ingredients": [
+      {
+        "items": [
+          "12 oz. (340g) smoked turkey sausage, sliced into 1/3-inch thick slices (or beef, pork, chicken…)",
+          "16 oz (450g) sweet potatoes, peeled and diced into 3/4-inch cubes",
+          "16 oz. (450g) brussels sprouts, trimmed and halved",
+          "1/2 medium red onion, roughly sliced",
+          "1 tablespoon minced garlic",
+          "2 tablespoons olive oil",
+          "1 teaspoon Italian seasoning or Herbes de Provence",
+          "1/2 teaspoon salt and freshly ground black pepper",
+          "1 tablespoon chopped parsley, for garnish",
+          "1 tablespoon parmesan shavings, for serving (optional)",
+          "The sauce1/3 cup maple syrup",
+          "1/3 cup Dijon mustard"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "To make the sausage and veggies sheet pan dinner: Preheat your oven to 400ºF (200ºC). Lightly spray a large sheet pan with cooking spray. Spread the diced sweet potatoes and halved Brussels sprouts apart on the sheet pan. Turn the Brussels sprouts cut side down so they get that nice golden sear!"
+      },
+      {
+        "text": "Drizzle everything with olive oil, sprinkle with seasoning, then add salt and pepper to taste. Roast the sweet potatoes and Brussels sprouts for a first round in the preheated oven for 15 minutes."
+      },
+      {
+        "text": "In the meantime, make the sauce: Combine maple syrup and Dijon mustard in a mason jar and shake well."
+      },
+      {
+        "text": "Remove the sheet pan from the oven, and add sliced sausage, garlic, and red onion. Drizzle half the maple-dijon sauce over and toss with the veggies and spread everything on the sheet pan in one layer. Return the sheet pan to the oven and continue to roast until veggies are tender, about 15 minutes longer."
+      },
+      {
+        "text": "Remove the sheet pan from the oven. Drizzle the remaining sauce over the sausage and veggies and toss to coat. Sprinkle the sausage and veggies sheet pan with parsley and parmesan and serve immediately. Enjoy!"
+      }
+    ],
+    "tips": [],
+    "image": "dinner/quick/sheet-pan-sausage-veggies.jpg",
+    "source_url": "https://www.eatwell101.com/sheet-pan-sausage-veggies-recipe"
+  },
+  {
+    "slug": "single-pan-chicken-vegetables",
+    "category": [
+      "dinner",
+      "quick"
+    ],
+    "title": "One Pot Chicken and Vegetables Skillet (Healthy & Low Carb)",
+    "subtitle": "Our one pot chicken and vegetables recipe takes 20 minutes to make and will wow your family with its amazing flavor! Super easy to make, this chicken breast and vegetables recipe is also excellent for meal prep.",
+    "prepTime": "10 minutes",
+    "cookTime": "15 minutes",
+    "serves": "2 servings",
+    "ingredients": [
+      {
+        "items": [
+          "1 lb (450g) skinless, boneless chicken breast, cut into 1-inch pieces",
+          "2 zucchini, sliced",
+          "2 red bell peppers, chopped into chunks",
+          "1 broccoli crown, broken into florets",
+          "1/2 onion, sliced",
+          "1/4 teaspoon salt and pepper",
+          "2 tablespoons olive oil",
+          "2 tablespoons Cajun seasoning",
+          "1/4 cup (60ml) low-sodium chicken broth",
+          "1 tablespoon fresh chopped parsley, for garnish",
+          "1/2 teaspoon red chili pepper flakes, optional"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "To make the Chicken Bites and Vegetable Skillet: In a large bowl add the chicken breast cubes and season with salt and pepper. Add 1 tablespoon olive oil and cajun seasoning and toss until coated."
+      },
+      {
+        "text": "Heat a large skillet over medium heat with 1 tablespoon olive oil. Add seasoned chicken bites and cook for 5-7 minutes until the chicken is cooked. Remove to a plate and set aside"
+      },
+      {
+        "text": "In the same skillet, stir fry the onion (add a little olive oil if needed) for 2 minutes, then add broccoli, zucchini, and bell pepper. Season with Cajun seasoning and cook on medium until vegetables are crisp-tender."
+      },
+      {
+        "text": "Deglaze with chicken stock, then add the cooked chicken bites back to the skillet and mix to combine. If desired, garnish with red chili pepper flakes and fresh parsley, and serve the chicken bites and vegetables immediately. Enjoy! ❤️"
+      }
+    ],
+    "tips": [],
+    "image": "dinner/quick/single-pan-chicken-vegetables.jpg",
+    "source_url": "https://www.eatwell101.com/healthy-chicken-vegetable-recipe"
+  },
+  {
+    "slug": "tom-kha-gai",
+    "category": [
+      "dinner",
+      "quick"
+    ],
+    "title": "Authentic Tom Kha Gai",
+    "subtitle": "By Seonkyoung",
+    "totalTime": "20 mins",
+    "serves": "4",
+    "ingredients": [
+      {
+        "items": [
+          "2 cups chicken broth",
+          "1 large or 2 small lemongrass, pounded",
+          "2 oz galangal, pounded",
+          "2 medium or 4 small shallots, diced",
+          "2 tsp palm sugar",
+          "2 tbsp fish sauce (Red Boat or Three Crabs)",
+          "1 can (13.5 oz) coconut milk (Chaokoh)",
+          "1 large tomato",
+          "5 oz mushrooms (oyster or beech, or your favorite)",
+          "2 to 3 kaffir lime leaves, removed stems",
+          "1 to 3 Thai chilies, pounded",
+          "10 oz chicken, sliced into bite size (about 1 chicken breast or 2 thighs)",
+          "2 green onions, chopped",
+          "Handful cilantro, chopped",
+          "1/4 to 1/3 cup freshly squeezed lime juice (2 to 3 limes)"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Pour chicken broth into a wok or medium size pot. Add lemongrass, galangal and shallot. Bring it to boil over medium high heat, then add palm sugar, fish sauce, coconut milk, tomatoes, mushrooms, lime leaves, Thai chilies and chicken. Stir gently and bring it to a light simmer, then reduce heat to medium and gently simmer for 6 minutes or until chicken is fully cooked."
+      },
+      {
+        "text": "Add green onion and cilantro. Turn off heat. Lastly,add lime juice. 1/4 cup if you like more creamier soup and 1/3 cup if you want more tangy flavor in your soup. Stir gently one last time and serve with warm cooked jasmine rice! Enjoy!"
+      }
+    ],
+    "tips": [],
+    "image": "dinner/quick/tom-kha-gai.jpg"
+  },
+  {
+    "slug": "elote-salad",
+    "category": [
+      "dinner",
+      "salad"
+    ],
+    "title": "Elote Salad",
+    "subtitle": "Mexican Street Corn Salad - A fresh and flavorful side dish perfect for summer gatherings",
+    "prepTime": "15 minutes",
+    "cookTime": "15 minutes",
+    "totalTime": "30 minutes",
+    "serves": "6-8 people",
+    "ingredients": [
+      {
+        "items": [
+          "8 ears of corn",
+          "1 red onion",
+          "1 jalapeño",
+          "1 cup cotija cheese (crumbled)",
+          "5 cloves garlic (minced)",
+          "½ cup Mexican mayo",
+          "¼ cup Mexican crema",
+          "Salt, pepper, and MSG to taste",
+          "Cumin, paprika, and chili powder to taste"
+        ]
+      },
+      {
+        "group": "For Serving",
+        "items": [
+          "Fresh cilantro (chopped)",
+          "Additional cotija cheese",
+          "Hot Cheeto topping (optional)"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "lead": "Prepare the corn",
+        "text": "Soak corn in husk for 15 minutes, then roast until kernels are tender and slightly charred."
+      },
+      {
+        "lead": "Roast vegetables",
+        "text": "Roast the corn, jalapeño, onion, and garlic until caramelized and fragrant."
+      },
+      {
+        "lead": "Cool and prepare",
+        "text": "Allow roasted vegetables to cool, then dice them and mix with the rest of the ingredients."
+      },
+      {
+        "lead": "Season",
+        "text": "Add salt, pepper, MSG, cumin, paprika, and chili powder. Adjust spices to taste."
+      },
+      {
+        "lead": "Serve",
+        "text": "Garnish with fresh cilantro, extra cotija cheese, and Hot Cheeto topping for a fun twist."
+      }
+    ],
+    "tips": [
+      "For extra flavor, char the corn directly over an open flame or on a grill",
+      "Mexican crema can be substituted with sour cream mixed with a little lime juice",
+      "This salad is best served fresh but can be refrigerated for up to 2 days",
+      "The Hot Cheeto topping adds a fun crunch and spice - crush them just before serving",
+      "Adjust the amount of jalapeño based on your heat preference"
+    ],
+    "image": "dinner/salad/elote-salad.jpg"
+  },
+  {
+    "slug": "mediterranean-salad",
+    "category": [
+      "dinner",
+      "salad"
+    ],
+    "title": "Mediterranean Salad",
+    "ingredients": [
+      {
+        "items": [
+          "1 cucumber",
+          "1 tomato",
+          "1 lemon, juiced",
+          "½ cup bacon",
+          "oregano",
+          "basil",
+          "salt & pepper",
+          "olive oil",
+          "feta",
+          "greek olives",
+          "onion"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Chop the cucumber, tomato, and onion."
+      },
+      {
+        "text": "Combine all vegetables in a large bowl."
+      },
+      {
+        "text": "Add bacon, feta, and greek olives."
+      },
+      {
+        "text": "Drizzle with olive oil and lemon juice."
+      },
+      {
+        "text": "Season with oregano, basil, salt, and pepper to taste."
+      },
+      {
+        "text": "Toss gently and serve chilled."
+      }
+    ],
+    "tips": [],
+    "image": "dinner/salad/mediterranean-salad.jpg"
+  },
+  {
+    "slug": "butter-beer",
+    "category": [
+      "drinks"
+    ],
+    "title": "Butterbeer",
+    "ingredients": [
+      {
+        "items": [
+          "1 quart Vanilla Ice Cream",
+          "1/4 cup Butterscotch Syrup",
+          "32 oz Cream Soda"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Place 4 (16-ounce) glasses in freezer and chill for at least 20 minutes"
+      },
+      {
+        "text": "Mix ice cream and cream soda in a blender until combine"
+      },
+      {
+        "text": "Divide between the frosted glasses"
+      },
+      {
+        "text": "Top each glass with whipped cream, if desired"
+      },
+      {
+        "text": "Serve with spoons and straws"
+      }
+    ],
+    "tips": [],
+    "image": "drinks/butter-beer.webp",
+    "source_url": "https://wizardingworldpark.com/butterbeer-recipes/"
+  },
+  {
+    "slug": "beer-cheese",
+    "category": [
+      "snacks"
+    ],
+    "title": "Beer Cheese Dip",
+    "subtitle": "This easy beer cheese dip is great served hot, warm, or even cold with soft pretzels, tortilla chips, or fresh veggies!",
+    "prepTime": "10 minutes",
+    "cookTime": "12 minutes",
+    "totalTime": "22 minutes",
+    "serves": "12 servings",
+    "ingredients": [
+      {
+        "items": [
+          "¼ cup butter",
+          "¼ cup flour",
+          "½ teaspoon onion powder",
+          "½ teaspoon garlic powder",
+          "⅛ teaspoon cayenne pepper",
+          "1 cup milk",
+          "⅔ cup beer (I used Budweiser)",
+          "1 teaspoon dijon mustard",
+          "1 teaspoon Worcestershire sauce",
+          "2 cups sharp cheddar (shredded)",
+          "1 cup gruyere ( or swiss cheese, shredded)"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Melt butter, flour, onion powder, garlic powder, and cayenne pepper over medium heat in a saucepan. Cook 1 minute."
+      },
+      {
+        "text": "Stir in milk and beer a bit at a time, whisking until smooth after each addition. Continue cooking over medium heat, add in mustard and Worcestershire, cooking sauce until thick and bubbly."
+      },
+      {
+        "text": "Reduce heat to low, add cheeses, and stir just until melted and smooth."
+      },
+      {
+        "text": "Serve warm with vegetables, tortilla chips or soft pretzels."
+      }
+    ],
+    "tips": [],
+    "image": "snacks/beer-cheese.jpg",
+    "source_url": "https://www.spendwithpennies.com/beer-cheese-dip/"
+  },
+  {
+    "slug": "beef-jerky",
+    "category": [
+      "snacks",
+      "dehydrator"
+    ],
+    "title": "Simple Homemade Beef Jerky",
+    "subtitle": "An easy homemade beef jerky recipe that is both delicious and Whole30 compliant. You'll never eat store-bought jerky again!",
+    "prepTime": "10 minutes",
+    "cookTime": "8 hours",
+    "totalTime": "1 day 8 hours 10 minutes",
+    "serves": "12",
+    "ingredients": [
+      {
+        "items": [
+          "3 lb london broil",
+          "2 cups pineapple juice",
+          "1 cup apple cider vinegar",
+          "6 oz coconut aminos",
+          "2 oz lemon juice",
+          "1 teaspoon paprika",
+          "2 Tablespoons smoked salt",
+          "1 teaspoon black pepper",
+          "1 teaspoon ground ginger",
+          "1 teaspoon onion powder",
+          "1 teaspoon garlic powder",
+          "1 teaspoon chili powder"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Using one hand to press down on the meat, thinly slice the london broil into strips, cutting across the grain of the meat."
+      },
+      {
+        "text": "In a bowl, whisk together all other ingredients until well incorporated."
+      },
+      {
+        "text": "Arrange the strips of london broil with \"meat space,\" allowing for maximum exposure to the marinade."
+      },
+      {
+        "text": "Pour the marinade over the meat, then cover and place in the refrigerator for anywhere from 1-3 days (at least 24 hours is recommended)."
+      },
+      {
+        "text": "When ready to dehydrate, remove the meat from the marinade and place in a single layer on dehydrator sheets or on a baking rack on top of a baking sheet in the oven."
+      },
+      {
+        "text": "Dehydrator: Place trays in the dehydrator and set to the jerky setting, or to 150°. Dehydrate for up to 8 hours. (See notes for additional details.)"
+      },
+      {
+        "text": "Oven: Place baking sheets with racks in an oven preheated to between 175-200° for up to 6 hours. (See notes for additional details.)"
+      }
+    ],
+    "tips": [],
+    "image": "snacks/dehydrator/beef-jerky.jpg",
+    "source_url": "https://www.paleoscaleo.com/simple-homemade-beef-jerky/"
+  },
+  {
+    "slug": "cantaloupe-chips",
+    "category": [
+      "snacks",
+      "dehydrator"
+    ],
+    "title": "Cantaloupe Chips",
+    "subtitle": "Naturally sweet, leathery-crunchy dehydrated cantaloupe.",
+    "cookTime": "16 to 18 hours",
+    "ingredients": [
+      {
+        "items": [
+          "Cantaloupes (as many as you like)"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Spoon the seeds out of the cantaloupes."
+      },
+      {
+        "text": "Cut each cantaloupe in half, then each half into fourths, then cut the fourths into 1/2 inch slices. Thicker slices take much longer to dry; thinner ones will not turn into chips."
+      },
+      {
+        "text": "Arrange the slices on your dehydrator sheets."
+      },
+      {
+        "text": "Dehydrate at 135 degrees F for 16-18 hours. Cantaloupe is juicy, so put it on the bottom shelves if you are drying other things."
+      },
+      {
+        "text": "Check around the 16 hour mark. Stop when they are as crisp or leathery as you like; closer to 18 hours is crisp but still tastes like fruit leather."
+      },
+      {
+        "text": "Store in mason jars."
+      }
+    ],
+    "tips": [
+      "Measure the first few slices to get a feel for 1/2 inch."
+    ],
+    "image": "snacks/dehydrator/cantaloupe-chips.jpg",
+    "source_url": "https://brooklynfarmgirl.com/how-to-dehydrate-cantaloupe/"
+  },
+  {
+    "slug": "marshmallows",
+    "category": [
+      "snacks",
+      "dehydrator"
+    ],
+    "title": "Dehydrated Marshmallows (AKA Unicorn Poop)",
+    "subtitle": "Use any colored mini marshmallows you like for different holidays!",
+    "prepTime": "5 minutes",
+    "cookTime": "2 hours",
+    "totalTime": "2 hours 5 minutes",
+    "ingredients": [
+      {
+        "items": [
+          "1 bag miniature marshmallows"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "lead": "FOOD DEHYDRATOR",
+        "text": "Place marshmallows in a single layer on food dehydrator trays. Leave a little room around each on so they don't create a giant marshmallow clump when they poof. (We used fruit leather trays in our dehydrator so they would stick less to the bottom, but your dehydrator may vary)"
+      },
+      {
+        "text": "If you have a temperature control, set it to 160° or medium. If you don't, no worries, just set it to on. Dehydrate for 2 to 3 hours. Start testing after the marshmallows poof a little and look dry on the outside. Keep testing until they are completely dry."
+      },
+      {
+        "text": "Let marshmallows cool and store in an airtight jar in pantry."
+      },
+      {
+        "lead": "OVEN",
+        "text": "Preheat oven to the LOWEST setting you can get. Preferably 200°F or lower. Place marshmallows on a single layer on baking sheet. Toss every 20 minutes and bake until marshmallows are completely dry. (It is a good idea to leave the oven door cracked open so you can keep a good eye on the marshmallows and avoid getting them too hot)."
+      },
+      {
+        "text": "Let marshmallows cool and store in an airtight jar in pantry."
+      }
+    ],
+    "tips": [],
+    "image": "snacks/dehydrator/marshmallows.jpg",
+    "source_url": "https://ourlittlehomestead.org/recipes/dehydrated-marshmallows/"
+  },
+  {
+    "slug": "pickle-chips",
+    "category": [
+      "snacks",
+      "dehydrator"
+    ],
+    "title": "Dehydrated Pickle Chips",
+    "subtitle": "Portable, salty, intensely pickle-flavored chips. For serious pickle lovers only.",
+    "cookTime": "4 to 6 hours",
+    "ingredients": [
+      {
+        "items": [
+          "A jar of pickles (whole, spear, or chip cut; kosher dill, sweet dill, or homemade)"
+        ]
+      },
+      {
+        "group": "Pickling brine for rehydrating (1 pint)",
+        "items": [
+          "16 ounces water",
+          "1/4 cup granulated sugar",
+          "1 tablespoon pickling salt",
+          "3 ounces distilled white vinegar (5% acidity)",
+          "2 tablespoons pickling spice",
+          "1 tablespoon dill seed"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Take pickle slices out of the jar and pat until slightly damp. If using whole pickles, cut them into evenly sized slices."
+      },
+      {
+        "text": "Arrange the chips on dehydrator trays. They can touch but should not overlap."
+      },
+      {
+        "text": "Dry at 135 degrees F for 4 to 6 hours. With a bottom-heating dehydrator, rotate the trays halfway through; check after 2 to 3 hours."
+      },
+      {
+        "lead": "Rehydrating (optional)",
+        "text": "Put pickling spice and dill seed in a 1-quart jar. Boil water, sugar, salt and vinegar, pour over the spices, cool, cap and refrigerate 2 days. Soak the chips in the brine; plain water will not bring back the pickle flavor."
+      }
+    ],
+    "tips": [
+      "Quite salty; a large pickle makes about 10 slices, so they are easy to overeat."
+    ],
+    "image": "snacks/dehydrator/pickle-chips.jpg",
+    "source_url": "https://rockinwhomestead.com/dehydrated-pickles/"
+  },
+  {
+    "slug": "maple-bacon-brussels-sprouts",
+    "category": [
+      "thanksgiving"
+    ],
+    "title": "Maple Bacon Brussels Sprouts",
+    "subtitle": "Crispy, sweet, and smoky—the side dish that steals the show every time. A game-changer your dinner table's been missing.",
+    "ingredients": [
+      {
+        "items": [
+          "Brussels sprouts – 1 lb",
+          "Bacon – 4 slices",
+          "Maple syrup – 2 tbsp",
+          "Olive oil – 1 tbsp",
+          "Salt – ¼ tsp"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Preheat your oven to 400°F. Line a baking sheet with parchment paper for easy cleanup."
+      },
+      {
+        "text": "Trim the stems off the Brussels sprouts, then halve them. Tip: Keep the leaves that fall off—they'll get extra crispy."
+      },
+      {
+        "text": "Chop the bacon into ½-inch pieces. Cook in a skillet over medium heat until crispy, about 5 minutes. Drain on paper towels, reserving 1 tbsp of bacon fat."
+      },
+      {
+        "text": "Toss the Brussels sprouts with olive oil, reserved bacon fat, and salt. Spread them on the baking sheet in a single layer."
+      },
+      {
+        "text": "Roast for 20 minutes, then flip the sprouts for even browning. Tip: Don't overcrowd the pan, or they'll steam instead of roast."
+      },
+      {
+        "text": "Drizzle with maple syrup and sprinkle the crispy bacon over the top. Roast for another 5 minutes until caramelized."
+      },
+      {
+        "text": "Serve immediately. Tip: For an extra crunch, top with chopped pecans right before serving."
+      }
+    ],
+    "tips": [
+      "Here's the deal—these sprouts are irresistibly crispy on the outside, tender inside, with a perfect balance of sweet and smoky. They're perfect for your next pizza night."
+    ],
+    "image": "thanksgiving/maple-bacon-brussels-sprouts.webp"
+  },
+  {
+    "slug": "pretzle-stuffing",
+    "category": [
+      "thanksgiving"
+    ],
+    "title": "Pretzel Stuffing",
+    "cookTime": "40 minutes",
+    "totalTime": "2 hours",
+    "serves": "6 to 8 servings",
+    "ingredients": [
+      {
+        "items": [
+          "10 heaping cups cubed pretzel rolls",
+          "One 16-ounce package bacon, cut into 1/2-inch pieces",
+          "1 medium onion, chopped",
+          "4 celery ribs, chopped",
+          "Kosher salt and freshly ground black pepper",
+          "1 1/2 cups chicken broth",
+          "1/2 cup beer",
+          "1/4 cup Dijon mustard",
+          "2 tablespoon honey",
+          "2 large eggs",
+          "Nonstick cooking spray or butter, for greasing the casserole dish",
+          "1/2 cup chopped fresh parsley"
+        ]
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Preheat the oven to 200 degrees F. Spread out the pretzel cubes on baking sheets and bake, flipping cubes halfway through, until the bread dries out, about 1 hour. Set aside to cool and increase the oven temperature to 375 degrees F."
+      },
+      {
+        "text": "Fry the bacon until crisp in a large saute pan. Remove to a paper towel-lined plate to cool. Drain off 1/4 cup bacon grease from pan; set aside. Add the onion and celery to the pan with the remaining bacon grease and cook over medium heat until soft, about 5 minutes; season with salt and pepper. Set aside."
+      },
+      {
+        "text": "Whisk together the chicken broth, beer, mustard, honey and eggs in a medium bowl."
+      },
+      {
+        "text": "Grease a 9-by-13-inch casserole dish, then gently combine the bread cubes, bacon, parsley and onion/celery mixture in the dish. Pour the broth mixture over the top and toss gently to coat. Pour the reserved bacon grease over the top; bake until set and golden, about 40 minutes."
+      }
+    ],
+    "tips": [],
+    "image": "thanksgiving/pretzle-stuffing.jpg",
+    "source_url": "https://www.foodnetwork.com/recipes/pretzel-stuffing-5497102"
+  }
+]

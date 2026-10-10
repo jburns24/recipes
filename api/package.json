@@ -1,0 +1,31 @@
+{
+  "name": "@recipes/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "seed": "tsx scripts/seed.ts",
+    "seed:supabase": "tsx scripts/seed-supabase.ts",
+    "bundle": "esbuild src/server.ts --bundle --platform=node --target=node22 --format=esm --banner:js=\"import { createRequire as __cr } from 'node:module'; const require = __cr(import.meta.url);\" --outfile=bundle/server.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "@hono/node-server": "^2.1.3",
+    "@supabase/supabase-js": "^2.117.2",
+    "cheerio": "^1.2.0",
+    "hono": "^4.13.13",
+    "jose": "^6.2.12",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "vitest": "^5.0.3"
+  }
+}
