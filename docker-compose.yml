@@ -1,8 +1,33 @@
-version: '3.8'
+# LOCAL ONLY: file store + dev auth + stub extractor, no secrets needed.
+#   task docker   (or: docker compose up --build)    web http://localhost:8080, api http://localhost:3000
+# Production images (docker/*.Dockerfile) default to NODE_ENV=production + AUTH_MODE=supabase; the API
+# refuses to start with AUTH_MODE=dev or CLAUDE_STUB there. Never copy these env values to a deployment.
+# The frontend image is a production build, so the in-browser "Sign in (dev)" button does not exist
+# (it is stripped). Use `task dev` for the dev UI, or add recipes against this stack with:
+#   curl -H 'Authorization: Bearer dev-token' -F image=@photo.jpg http://localhost:3000/api/extract
 services:
-  web:
-    build: .
-    ports:
-      - "8080:80"
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    environment:
+      NODE_ENV: development
+      AUTH_MODE: dev
+      DEV_AUTH_TOKEN: dev-token
+      STORE: file
+      DATA_DIR: /data
+      CLAUDE_STUB: '1'
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    # root so the bind-mounted ./data is writable regardless of host uid (local only)
+    user: root
     volumes:
-      - ./src:/usr/share/nginx/html:ro
+      - ./data:/data
+    ports:
+      - '3000:3000'
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    depends_on: [backend]
+    ports:
+      - '8080:80'

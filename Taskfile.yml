@@ -1,0 +1,77 @@
+version: '3'
+
+tasks:
+  install:
+    desc: Install npm workspace dependencies
+    cmds: [npm install]
+    sources: [package.json, '*/package.json']
+    generates: [node_modules/.package-lock.json]
+
+  dev:
+    desc: Run API (3000) and web (5173) dev servers with local defaults
+    deps: [install]
+    # Local defaults (override by exporting before running): AUTH_MODE=dev, DEV_AUTH_TOKEN=dev-token,
+    # STORE=file. CLAUDE_STUB=1 is enabled only when ANTHROPIC_API_KEY is unset (set CLAUDE_STUB=0 to force off).
+    env:
+      NODE_ENV: development
+      AUTH_MODE: '{{.AUTH_MODE | default "dev"}}'
+      DEV_AUTH_TOKEN: '{{.DEV_AUTH_TOKEN | default "dev-token"}}'
+      STORE: '{{.STORE | default "file"}}'
+    cmds:
+      - |
+        if [ -z "$CLAUDE_STUB" ] && [ -z "$ANTHROPIC_API_KEY" ]; then export CLAUDE_STUB=1; fi
+        [ "$CLAUDE_STUB" = "0" ] && unset CLAUDE_STUB
+        npx concurrently -n api,web -c blue,green "npm run dev -w api" "npm run dev -w web"
+
+  build:
+    desc: Build shared, api and web
+    deps: [install]
+    cmds: [npm run build]
+
+  test:
+    desc: Unit tests, then E2E
+    cmds:
+      - task: test:unit
+      - task: test:e2e
+
+  test:unit:
+    desc: Run vitest in all workspaces
+    deps: [install]
+    cmds: [npm run test:unit]
+
+  test:e2e:
+    desc: Run Playwright E2E tests (chromium; temp copy of data/, never mutates it)
+    deps: [install, seed]
+    cmds:
+      - npx playwright install chromium
+      - npm run e2e -w e2e
+
+  lint:
+    desc: ESLint, Prettier check and typecheck
+    deps: [install]
+    cmds:
+      - npm run lint
+      - npm run typecheck
+
+  seed:
+    desc: Convert archive/ recipes into data/recipes.json and data/images/ (idempotent)
+    deps: [install]
+    cmds: [npm run seed -w api]
+
+  seed:supabase:
+    desc: Load data/recipes.json and data/images/ into Supabase (needs SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+    deps: [install]
+    preconditions:
+      - sh: test -n "$SUPABASE_URL" && test -n "$SUPABASE_SERVICE_ROLE_KEY"
+        msg: Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
+    cmds: [npm run seed:supabase -w api]
+
+  docker:
+    desc: Build and run the site in Docker (web http://localhost:8080, api http://localhost:3000)
+    cmds: [docker compose up --build]
+
+  docker:build:
+    desc: Build the backend and frontend images locally
+    cmds:
+      - docker build -f docker/backend.Dockerfile -t recipes-backend .
+      - docker build -f docker/frontend.Dockerfile -t recipes-frontend .

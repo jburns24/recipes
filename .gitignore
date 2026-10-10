@@ -1,1 +1,16 @@
 tmp
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+coverage/
+test-results/
+playwright-report/
+.svelte-kit/
+# local store: recipes.json is seed data (tracked); images are local copies
+data/images/
+.task/
+api/bundle/

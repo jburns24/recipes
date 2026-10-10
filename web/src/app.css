@@ -1,0 +1,22 @@
+/* Index page styles carried over verbatim from the legacy archive/index.html */
+body.container {
+  background: #f8f9fa;
+}
+body.container h1 {
+  margin-top: 2rem;
+}
+body.container a {
+  text-decoration: none;
+}
+body.container a:hover {
+  text-decoration: underline;
+}
+.app-toolbar {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  z-index: 10;
+}
