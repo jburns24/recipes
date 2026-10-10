@@ -13,7 +13,9 @@ case "$component" in
   *) echo "unknown component: $component" >&2; exit 2 ;;
 esac
 
-last="$(git tag -l "$component/v*" --sort=-v:refname | head -n1)"
+# --count avoids `git tag | head` under pipefail: head closes the pipe early and git
+# exits 141 once the tag list no longer fits in the pipe buffer, which fails the release.
+last="$(git for-each-ref --sort=-v:refname --format='%(refname:short)' --count=1 "refs/tags/${component}/v*")"
 if [ -z "$last" ]; then
   echo "$component/v0.1.0"
   exit 0

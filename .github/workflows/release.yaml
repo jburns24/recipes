@@ -23,12 +23,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Full history plus tags. checkout v4 leaves fetch-tags false unless asked,
+          # and next-tag.sh treats a repo with no visible tags as the first release.
           fetch-depth: 0
+          fetch-tags: true
 
       - name: Compute and push tags
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for component in backend frontend; do
@@ -37,9 +41,14 @@ jobs:
               echo "$component: no changes since last tag"
               continue
             fi
+            version="${tag#*/v}"
             echo "$component: tagging $tag"
             git tag -a "$tag" -m "$tag"
             git push origin "refs/tags/$tag"
             # Tags pushed with GITHUB_TOKEN do not trigger other workflows, so dispatch explicitly.
-            gh workflow run docker.yaml --ref "$tag"
+            # --ref is the tag (code + github.sha). The version input is the number just computed,
+            # so the image tag does not depend on re-parsing github.ref inside the dispatched run.
+            gh workflow run docker.yaml --ref "$tag" \
+              -f "component=$component" \
+              -f "version=$version"
           done

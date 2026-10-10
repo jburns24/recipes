@@ -11,9 +11,13 @@ COPY e2e/package.json e2e/
 RUN npm ci --workspace shared --workspace web
 COPY shared shared
 COPY web web
+# Publishable key (sb_publishable_...) and project URL. Passed by docker.yaml from
+# repository variables; empty in a local `task docker:build` unless you pass --build-arg.
 ARG VITE_SUPABASE_URL
 ARG VITE_SUPABASE_ANON_KEY
-ENV VITE_AUTH_MODE=supabase VITE_SUPABASE_URL=$VITE_SUPABASE_URL VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+ENV VITE_AUTH_MODE=supabase \
+    VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
+    VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
 RUN npm run build -w web
 
 FROM nginx:alpine

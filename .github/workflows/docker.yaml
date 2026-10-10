@@ -1,6 +1,8 @@
 # Builds and pushes ghcr.io/<owner>/recipes-backend (on backend/v* tags) and
 # ghcr.io/<owner>/recipes-frontend (on frontend/v* tags). Each image gets <version>, <sha> and
-# latest tags. Run by release.yaml (workflow_dispatch on the new tag) or by pushing a tag by hand.
+# latest tags. Run by release.yaml (workflow_dispatch on the new tag, with component and version
+# inputs) or by pushing a tag by hand. A tag push made with GITHUB_TOKEN does not start this
+# workflow; release.yaml dispatches it.
 name: Docker Build and Push
 on:
   push:
@@ -8,6 +10,18 @@ on:
       - 'backend/v*'
       - 'frontend/v*'
   workflow_dispatch:
+    inputs:
+      component:
+        description: Image to build
+        required: true
+        type: choice
+        options:
+          - backend
+          - frontend
+      version:
+        description: Image version without a leading v (for example 0.1.0)
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -15,18 +29,44 @@ permissions:
 
 jobs:
   image:
-    # Only meaningful when run against a release tag (manual dispatch must select the tag as ref).
-    if: startsWith(github.ref, 'refs/tags/backend/v') || startsWith(github.ref, 'refs/tags/frontend/v')
+    # Tag pushes carry the version in github.ref. workflow_dispatch (used by release.yaml, because
+    # a GITHUB_TOKEN tag push does not trigger this workflow) carries it in inputs and must select
+    # the tag as the ref so the checkout is that commit.
+    if: >-
+      startsWith(github.ref, 'refs/tags/backend/v') ||
+      startsWith(github.ref, 'refs/tags/frontend/v') ||
+      (github.event_name == 'workflow_dispatch' && inputs.version != '')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Resolve component and version
         id: tag
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_COMPONENT: ${{ inputs.component }}
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
-          name="${GITHUB_REF#refs/tags/}"
-          echo "component=${name%%/*}" >> "$GITHUB_OUTPUT"
-          echo "version=${name##*/v}" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          # Tag pushes have no inputs. workflow_dispatch passes the version release.yaml just computed.
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            component="$INPUT_COMPONENT"
+            version="$INPUT_VERSION"
+          else
+            name="${GITHUB_REF#refs/tags/}"
+            component="${name%%/*}"
+            version="${name##*/v}"
+          fi
+          case "$component" in
+            backend|frontend) ;;
+            *) echo "unsupported component: $component" >&2; exit 1 ;;
+          esac
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "unsupported version: $version" >&2
+            exit 1
+          fi
+          echo "component=$component" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Docker meta
         id: meta
@@ -48,6 +88,27 @@ jobs:
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
 
+      # Frontend sign-in is compiled in. Repository variables, not secrets: the publishable
+      # key is public. Empty values would ship a build that cannot sign in.
+      - name: Frontend Supabase build args
+        id: frontend
+        if: steps.tag.outputs.component == 'frontend'
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
+            echo "Set repository variables VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY" >&2
+            exit 1
+          fi
+          {
+            echo "args<<EOF"
+            echo "VITE_SUPABASE_URL=${VITE_SUPABASE_URL}"
+            echo "VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -57,5 +118,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: ${{ steps.frontend.outputs.args }}
           cache-from: type=gha,scope=${{ steps.tag.outputs.component }}
           cache-to: type=gha,mode=max,scope=${{ steps.tag.outputs.component }}
